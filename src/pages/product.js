@@ -23,5 +23,46 @@ let productID;
 
 // show product when page loads
 window.addEventListener("DOMContentLoaded", async function () {
+  const urlID = window.location.search;
+
+  try {
+    const response = await this.fetch(`${singleProductUrl}${urlID}`);
+    if (response.status >= 200 && response.status <= 299) {
+      const product = await response.json();
+      // grab data
+      const { id, fields } = product;
+      productID = id;
+      const { name, company, price, colors, description } = fields;
+      const img = fields.image[0].thumbnails.large.url;
+      // set values
+      this.document.title = `${name.toUpperCase()} | Comfy`;
+      pageTitleDOM.textContent = `Home / ${name}`;
+      imgDOM.src = img;
+      titleDOM.textContent = name;
+      companyDOM.textContent = `by ${company}`;
+      priceDOM.textContent = formatPrice(price);
+      descDOM.textContent = description;
+      colors.forEach((color) => {
+        const span = this.document.createElement("span");
+        span.classList.add("product-color");
+        span.style.backgroundColor = `${color}`;
+        colorsDOM.appendChild(span);
+      });
+    } else {
+      console.log(response.status, response.statusText);
+      centerDOM.innerHTML = `
+      <div>
+      <h3 class="error">sorry, something went wrong</h3>
+      <a href="index.html" class="btn">back home</a>
+      </div>
+      `;
+    }
+  } catch (error) {
+    console.log(error);
+  }
   loading.style.display = "none";
+});
+
+cartBtn.addEventListener("click", function () {
+  addToCart(productID);
 });
