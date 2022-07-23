@@ -19,7 +19,7 @@ const addToCartDOM = ({ id, name, price, image, amount }) => {
             </div>
             <!-- amount toggle -->
             <div>
-              <button class="cart-item-increase-btn">
+              <button class="cart-item-increase-btn" data-id="${id}">
                 <i class="fa-solid fa-chevron-up"></i>
               </button>
               <p class="cart-item-amount" data-id="${id}">${amount}</p>
